@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Internal evidence-based deployment artifact inspector">
+  <title>Tracepoint — Deployment Inspector</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#request" aria-label="Tracepoint home"><span class="brand-mark">T</span><span>TRACEPOINT</span></a>
+      <p class="eyebrow">DEPLOYMENT INTELLIGENCE</p>
+      <nav aria-label="Primary navigation">
+        <button class="nav-link active" data-view="request"><span>01</span>New inspection</button>
+        <button class="nav-link" data-view="history"><span>02</span>Inspection history <b id="history-count">0</b></button>
+      </nav>
+      <div class="side-foot">
+        <div class="secure"><i></i><span><strong>Secure workspace</strong>Evidence is sanitized locally</span></div>
+        <div class="identity"><span>NB</span><p><strong>Authorized inspector</strong><small>Platform session protected</small></p></div>
+      </div>
+    </aside>
+
+    <main id="main">
+      <header class="topbar">
+        <div><p class="eyebrow" id="breadcrumb">INSPECTIONS / NEW</p><h1 id="page-title">Inspect a deployment</h1></div>
+        <div class="system-state"><span></span>Inspector ready</div>
+      </header>
+
+      <section id="view-request" class="view active" aria-labelledby="page-title">
+        <div class="intro"><p>Correlate project context, build output, and deployed behavior into a concise report. Claims remain tied to inspectable evidence.</p><div class="policy-pill">Evidence-first analysis</div></div>
+        <form id="inspection-form" novalidate>
+          <div class="panel form-panel">
+            <div class="panel-head"><div><p class="eyebrow">TARGET CONTEXT</p><h2>Inspection request</h2></div><span class="required-note"><i>*</i> Required</span></div>
+            <div class="form-grid">
+              <label>Project label <i>*</i><input id="project-label" required value="deployment-artifact-inspection-summary-store" autocomplete="off"><small>Safe label only; project references resolve on the platform</small></label>
+              <label>Sender label <input id="sender" value="cli" autocomplete="off"><small>Non-sensitive request origin</small></label>
+              <label class="wide">Expected host and path scope <i>*</i><input id="expected-scope" type="url" required value="https://dashboard.nellobytesystems.com/agent2/devops/deployment-artifact-inspection-summary-store/" spellcheck="false"><small>Requests outside this exact prefix are rejected</small></label>
+              <label class="wide">Known build evidence<textarea id="build-context" rows="4">Ralph iteration 1; build agent Codex; build window 2026-07-22 17:05–17:16 UTC; created README.md, index.html, script.js, styles.css; script syntax check reported passed; three implementation files reported; commit message reported.</textarea><small>Stored as logged evidence, never as independent verification</small></label>
+              <label class="wide">Deployment URL <i>*</i><div class="url-field"><span aria-hidden="true">↗</span><input id="deployment-url" type="url" required value="https://dashboard.nellobytesystems.com/agent2/devops/deployment-artifact-inspection-summary-store/" spellcheck="false"></div><small>Only a credential-free GET to the authorized exact scope may be attempted</small></label>
+            </div>
+            <div id="form-error" class="form-error" role="alert" hidden></div>
+          </div>
+          <div class="notice"><span>◈</span><p><strong>Privacy boundary</strong>Secret values are detected and replaced with <code>[REDACTED]</code> before evidence is displayed or stored.</p></div>
+          <div class="actions"><p>Inspection continues when individual sources are unavailable.</p><button class="primary" type="submit">Inspect deployment <span>→</span></button></div>
+        </form>
+      </section>
+
+      <section id="view-progress" class="view" aria-labelledby="progress-title">
+        <div class="progress-heading"><div><p class="eyebrow">ACTIVE INSPECTION</p><h2 id="progress-title">Collecting available evidence</h2><p id="progress-subtitle">Sources are inspected independently. An unavailable source will not stop the report.</p></div><div class="progress-ring" id="progress-ring"><strong>0%</strong></div></div>
+        <div class="panel stages" id="stages" aria-live="polite"></div>
+        <div class="progress-foot"><span class="spinner"></span><p><strong id="progress-action">Validating target context…</strong><small>Do not close this tab while the inspection is running.</small></p></div>
+      </section>
+
+      <section id="view-result" class="view" aria-labelledby="result-title">
+        <div class="result-top"><div><p class="eyebrow">SANITIZED REPORT</p><h2 id="result-title">Artifact identification report</h2><p id="result-meta"></p></div><div class="result-actions"><button class="secondary" id="new-inspection">New</button><button class="secondary" id="rerun">Re-run</button><button class="secondary" id="export-report">Export</button><button class="primary compact" id="copy-report">Copy</button></div></div>
+        <div class="status-banner"><span class="big-status" id="result-status">PARTIAL</span><div><strong id="status-title">A bounded report was generated</strong><p id="status-detail"></p></div></div>
+        <div class="result-grid">
+          <article class="panel report-card"><div class="panel-head"><div><p class="eyebrow">WHAT WAS BUILT</p><h3>Artifact summary</h3></div><span class="confidence">LIMITED CONFIDENCE</span></div><p id="summary-text"></p></article>
+          <aside class="panel evidence-tally"><p class="eyebrow">EVIDENCE BALANCE</p><div><span class="verified-dot"></span><p><strong id="verified-count">2</strong><small>Verified</small></p></div><div><span class="inferred-dot"></span><p><strong id="inferred-count">1</strong><small>Inferred</small></p></div><div><span class="unavailable-dot"></span><p><strong id="unavailable-count">7</strong><small>Unavailable</small></p></div></aside>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Report views"><button class="tab active" data-tab="findings" role="tab">Ordered report</button><button class="tab" data-tab="evidence" role="tab">Evidence</button><button class="tab" data-tab="plain" role="tab">Sanitized export</button></div>
+        <div id="tab-findings" class="tab-panel active" role="tabpanel"><div id="findings-list" class="findings-list"></div></div>
+        <div id="tab-evidence" class="tab-panel" role="tabpanel"><div id="evidence-list" class="panel evidence-list"></div></div>
+        <div id="tab-plain" class="tab-panel" role="tabpanel"><pre class="plain-report" id="plain-report"></pre></div>
+      </section>
+
+      <section id="view-history" class="view" aria-labelledby="history-title">
+        <div class="history-top"><div><p class="eyebrow">BROWSER-LOCAL AUDIT TRAIL</p><h2 id="history-title">Inspection history</h2><p>Up to 50 sanitized reports are retained only in this browser until cleared.</p></div><div class="result-actions"><button class="secondary" id="clear-history">Clear history</button><button class="primary compact" id="history-new">New inspection</button></div></div>
+        <div class="panel history-panel"><div class="history-tools"><label><span class="sr-only">Search history</span><input id="history-search" placeholder="Search URL, category, label, or ID"></label><select id="history-filter" aria-label="Filter by completion state"><option value="all">All states</option><option value="completed">Completed</option><option value="completed-with-warnings">With warnings</option><option value="failed">Failed</option></select></div><div id="history-list"></div></div>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
